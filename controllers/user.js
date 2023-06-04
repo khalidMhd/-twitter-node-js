@@ -32,7 +32,8 @@ exports.changeProfilePic = async (req, res, next) => {
 exports.changeProfile = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    const { name, cellNo, location, address, education, bio } = req.body;
+    const { name, cellNo, location, address, education, bio, isNotify } =
+      req.body;
     const { _id } = await userIdFromJWT(authorization);
     if (!_id) {
       return res.status(200).json({ message: "User not valid!" });
@@ -48,7 +49,8 @@ exports.changeProfile = async (req, res, next) => {
       userMatch.address = address;
       userMatch.education = education;
       userMatch.bio = bio;
-      await userMatch.save();
+      userMatch.isNotify = isNotify;
+      const upd = await userMatch.save();
       return res.status(200).json({ message: "Profile updated" });
     } else {
       return res.status(200).json({ message: "User unable to update" });
@@ -340,7 +342,7 @@ exports.users = async (req, res, next) => {
           phone: user?.phone || "-",
           image: user?.imageURL,
           education: user.education || "-",
-          fcmToken: user.fcmToken
+          fcmToken: user.fcmToken,
         };
       });
       return res.status(200).json(transformedUsers);

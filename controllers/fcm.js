@@ -7,12 +7,15 @@ const { userModel } = require("../models/user");
 exports.pushNotification = async (tweet, user) => {
   const userDetails = await userModel
     .findOne({ _id: user })
-    .populate("followers", "fcmToken")
+    .populate({
+      path: 'followers',
+      match: { isNotify: true },
+      select:"fcmToken"
+    })
     .select("name");
-  // console.log(userDetails);
+  console.log(userDetails);
 
   const token = await userDetails.followers.map((res) => res.fcmToken);
-  console.log(token);
   var message = await {
     registration_ids: token,
     notification: {

@@ -28,6 +28,7 @@ const userSchema = new Schema({
   bio: { type: String, default: "" },
   expireToken: { type: Date },
   updatedAt: { type: Date },
+  isNotify: {type: Boolean, default: true},
   createdAt: { type: Date, default: Date.now },
 });
 
